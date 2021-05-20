@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,700;1,400&display=swap');
+
+body{
+  --theme-transition: 0.5s ease;
+}
+
+body{
+  --background-color: black;
+  --text-color: white;
+  --foreground-color: #222;
+  --card-red: #d83636;
+  --card-black: white;
+}
+
+body.theme-light{
+  --background-color: #ddd;
+  --text-color: black;
+  --foreground-color: white;
+  --card-red: #ce1414;
+  --card-black: black;
+}
+
+/* svg.card>#SD9, svg.card>#VD9, svg.card>#SH9, svg.card>#VH9 { */
+.card-red symbol>path{
+  fill: var(--card-red);
+  stroke: var(--card-red);
+}
+
+/* svg.card>#SC9, svg.card>#VC9, svg.card>#SS9, svg.card>#VS9 { */
+.card-black symbol>path {
+  fill: var(--card-black);
+  stroke: var(--card-black);
+}
+
+svg.card *{
+  transition: fill var(--theme-transition), stroke var(--theme-transition);
+}
+
+svg *[fill="none"]{
+  fill: none !important;
+}
+svg *[stroke="none"]{
+  stroke: none !important;
+}
+
+svg use[stroke="#44F"]{
+  stroke: none;
+}
+svg use[fill="white"]{
+  fill: none;
+}
+
+svg.card>rect{
+  fill: var(--foreground-color);
+  stroke: none;
+}
+
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: color var(--theme-transition), background-color var(--theme-transition);
+}
+
+* {
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+button{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 6px;
+  background-color: var(--foreground-color);
+  border: none;
+  color: var(--text-color);
+  font-size: large;
+  transition: color var(--theme-transition), background-color var(--theme-transition), transform 240ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+button:hover{
+	transform: scale(1.1);
+}
+
+button:active{
+	transform: scale(1.05);
+}
+
+.buttonPanel{
+  display: flex;
+  gap: 8px;
+}

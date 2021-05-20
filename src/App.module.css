@@ -1,0 +1,39 @@
+.container{
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 12px;
+  width: 100vw;
+  height: 100vh;
+  padding: 16px;
+  box-sizing: border-box;
+  flex-direction: column;
+  overflow: auto;
+}
+
+.container>*{
+  width: 100%;
+  /* padding: 8px; */
+  box-sizing: border-box;
+}
+
+.header>*{
+  margin: 0;
+}
+
+.header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* .header{
+  background-color: red;
+}
+
+.content{
+  background-color: green;
+}
+
+.actionsPanel{
+  background-color: blue;
+} */

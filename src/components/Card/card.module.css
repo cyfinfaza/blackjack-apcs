@@ -1,0 +1,19 @@
+
+.cardContainer{
+	transition: filter 240ms ease;
+	width: 200px;
+}
+
+.cardContainer>div,
+.cardContainer>div>svg{
+	width: 100%;
+	height: 100%;
+}
+
+/* .cardContainer:hover{
+	filter: brightness(1.4);
+}
+
+.cardContainer:active{
+	filter: brightness(1.2);
+} */
