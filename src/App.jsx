@@ -14,8 +14,7 @@ function App() {
       </div>
       <div className={pageStyle.content}>
         <Card type="JH" />
-        {/* <Card type="9D" />
-        <Card type="AC" /> */}
+        <Card type="KH" />
       </div>
       <div className={pageStyle.actionsPanel}>
         <button
