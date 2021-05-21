@@ -26,6 +26,38 @@
   justify-content: space-between;
 }
 
+.content{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+}
+
+.content>div>*{
+  flex-shrink: 0;
+}
+
+.dealerCards, .playerCards{
+  width: 100%;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.dealerCards{
+  justify-content: space-between;
+}
+
+.dealerCards>div{
+  display: flex;
+  gap: 8px;
+}
+
+.playerCards{
+  /* justify-content: flex-end; */
+}
+
 /* .header{
   background-color: red;
 }

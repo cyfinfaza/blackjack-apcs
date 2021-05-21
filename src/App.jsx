@@ -1,27 +1,50 @@
 import React from "react";
 import * as pageStyle from "./App.module.css";
 import Card from "./components/Card/Card";
+import {useState} from 'react';
+
+// [
+//   {
+//     card:"3H",
+//     flipped:false,
+//   }
+// ]
 
 function App() {
+  const [dealerCardState, setDealerCardState] = useState([])
+  const [playerCardState, setPlayerCardState] = useState([])
+  function placeCard(){
+    setPlayerCardState([...playerCardState, {
+      card:"3H",
+      flipped:false,
+    }])
+  }
   return (
     <div className={pageStyle.container}>
       <div className={pageStyle.header}>
         <h1>React Blackjack</h1>
         <div className="buttonPanel">
-          <button>Switch Theme</button>
+          <button onClick={() => {
+            document.querySelector("body").classList.toggle("theme-light");
+          }}>Switch Theme</button>
           <button>Reset</button>
         </div>
       </div>
       <div className={pageStyle.content}>
-        <Card type="JH" />
-        <Card type="KH" />
+        <div className={pageStyle.dealerCards}>
+          <div>
+            {dealerCardState.map(element=><Card type={element.card} flipped={element.flipped} />)}
+          </div>
+          {/* <div>
+            <Card type="8C" flipped />
+          </div> */}
+        </div>
+        <div className={pageStyle.playerCards}>
+          {playerCardState.map(element=><Card type={element.card} flipped={element.flipped} />)}
+        </div>
       </div>
       <div className={pageStyle.actionsPanel}>
-        <button
-          onClick={() => {
-            document.querySelector("body").classList.toggle("theme-light");
-          }}
-        >
+        <button onClick={placeCard}>
           Click me
         </button>
       </div>
