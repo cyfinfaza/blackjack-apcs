@@ -58,6 +58,16 @@
   /* justify-content: flex-end; */
 }
 
+.actionsPanel{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.actionsPanel>p{
+  margin: 0;
+}
+
 /* .header{
   background-color: red;
 }

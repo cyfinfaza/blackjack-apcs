@@ -13,11 +13,13 @@ import {useState} from 'react';
 function App() {
   const [dealerCardState, setDealerCardState] = useState([])
   const [playerCardState, setPlayerCardState] = useState([])
+  const [directionState, setDirectionState] = useState("no state atm")
   function placeCard(){
     setPlayerCardState([...playerCardState, {
       card:"3H",
       flipped:false,
     }])
+    setDirectionState("just added a 3 of hearts");
   }
   return (
     <div className={pageStyle.container}>
@@ -27,7 +29,7 @@ function App() {
           <button onClick={() => {
             document.querySelector("body").classList.toggle("theme-light");
           }}>Switch Theme</button>
-          <button>Reset</button>
+          <button onClick={()=>setDirectionState("just reset")}>Reset</button>
         </div>
       </div>
       <div className={pageStyle.content}>
@@ -47,6 +49,9 @@ function App() {
         <button onClick={placeCard}>
           Click me
         </button>
+        <p >
+          {directionState}
+        </p>
       </div>
     </div>
   );
