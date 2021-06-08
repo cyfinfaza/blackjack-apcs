@@ -65,8 +65,9 @@ const allCards = [
 
 function App() {
   const possibleCardArray = useRef(allCards);
-  const [directionState, setDirectionState] = useState("no state atm");
-  const [dealerPlay, setDealerPlay] = useState(0);
+  const [directionState, setDirectionState] = useState(
+    "Hit to add card, Stay to pass to dealer"
+  );
   function getCard() {
     var getCardIndex = Math.floor(
       Math.random() * possibleCardArray.current.length
@@ -77,18 +78,10 @@ function App() {
     // setDirectionState("just added a " + cardToAdd);
     return cardToAdd;
   }
-  /*
-  function getFlipped(){
-    if(possibleCardArray.length == 52){
-      return true;
-    }
-    return false;
-    
-  }
-  */
   const [dealerCardState, setDealerCardState] = useState([]);
   const [playerCardState, setPlayerCardState] = useState([]);
   const [playerChoice, setPlayerChoice] = useState(true);
+  const [isHidden, setIsHidden] = useState(false);
 
   function placeDealerCard(isFlipped = false) {
     setDealerCardState([
@@ -129,9 +122,17 @@ function App() {
     return mapping[cardType.charAt(0)];
   }
 
-  function getDeckValue(cards) {
+  function getDeckValue(cards, tryNumWithA1 = 0) {
     let sum = 0;
-    cards.forEach((card) => (sum += getCardValue(card.card)));
+    let numA1s = 0;
+    cards.forEach((card) => {
+      if(card.card.charAt(0)=='A'){
+        numA1s++;
+      }
+      sum += getCardValue(card.card, numA1s<=tryNumWithA1)
+    });
+    console.log(numA1s)
+    if (sum > 21 && numA1s>tryNumWithA1) return getDeckValue(cards, tryNumWithA1+1);
     return sum;
   }
 
@@ -141,9 +142,11 @@ function App() {
       { card: getCard(), flipped: false },
     ];
     const initialPlayerDeck = [
-      { card: getCard(), flipped: false},
-      { card: getCard(), flipped: false}
-    ]
+      { card: getCard(), flipped: false },
+      { card: getCard(), flipped: false },
+      // { card: 'AH', flipped: false },
+      // { card: 'AD', flipped: false },
+    ];
     setPlayerCardState(initialPlayerDeck);
     setDealerCardState(initialDealerDeck);
     console.log(getDeckValue(initialDealerDeck));
@@ -154,28 +157,66 @@ function App() {
     console.log(deckVal);
     if (deckVal > 21) {
       setDirectionState("Player bust! Dealer wins!");
-      setPlayerChoice(false)
+      updateScore('losses')
+          setPlayerChoice(false);
     }
   }, [playerCardState]);
 
-  useEffect(() => {
-    var dealerDeckVal = getDeckValue(dealerCardState);
-    var gameOver = false;
-    console.log(getDeckValue(dealerCardState));
-    dealerDeckVal = getDeckValue(dealerCardState);
-    //while(gameOver==false){
-    if(dealerDeckVal > 21){
-      setDirectionState("Dealer bust! Player wins!");
-      gameOver=true;
-    } else if(dealerDeckVal>getDeckValue(playerCardState)){
-      setDirectionState("Dealer wins!");
-      gameOver=true;
-    } else{
-      placeDealerCard(false);
-    }
-  //ssszxsazWDXQsazWDXQsdfzxsazDXWf sdfxcv } 
-  } , [dealerPlay]);
+  function updateScore(condition){
+    window.localStorage.setItem(condition, (parseInt(window.localStorage.getItem(condition))||0)+1)
+  }
 
+  const playerStayed = useRef(false);
+
+  // useEffect(() => {
+  //   if(playerStayed.current){
+
+  //   }
+  // }, [dealerCardState]);
+
+  function dealerPlays() {
+    var dealerTempDeck = dealerCardState;
+    console.log(getDeckValue(dealerCardState));
+    while (true) {
+      var dealerDeckVal = getDeckValue(dealerTempDeck);
+      console.log(dealerDeckVal);
+      if (dealerDeckVal > 21) {
+        setDirectionState("Dealer bust! Player wins!");
+        updateScore('wins')
+        break;
+      } else if (dealerDeckVal >= 17) {
+        if (dealerDeckVal > getDeckValue(playerCardState)) {
+          setDirectionState("Dealer wins!");
+          updateScore('losses')
+        } else {
+          setDirectionState("Dealer loses!");
+          updateScore('wins')
+        }
+        break;
+      } else {
+        dealerTempDeck = [
+          ...dealerCardState,
+          {
+            card: getCard(),
+            flipped: false,
+          },
+        ];
+      }
+    }
+    setDealerCardState(
+      dealerTempDeck.map((elem) => {
+        elem.flipped = false;
+        return elem;
+      })
+    );
+    setPlayerChoice(false);
+  }
+
+  // function hideDealerCards(){
+  //   if(isHidden){
+  //     return ""
+  //   }
+  // }
 
   return (
     <div className={pageStyle.container}>
@@ -184,12 +225,12 @@ function App() {
         <div className="buttonPanel">
           <button
             onClick={() => {
+              window.localStorage.setItem('lightTheme', !document.body.classList.contains('theme-light'))
               document.querySelector("body").classList.toggle("theme-light");
             }}
           >
             Switch Theme
           </button>
-          <button onClick={() => window.location.reload()}>Reset</button>
         </div>
       </div>
       <div className={pageStyle.content}>
@@ -201,34 +242,59 @@ function App() {
           </div>
           {<div>{placeDealerCard}</div>}
         </div>
+        <div className={pageStyle.cardValueMonitor}>
+          <p>
+            Dealer card value:{" "}
+            <span>
+              {!isHidden
+                ? "? + " +
+                  getDeckValue(dealerCardState.filter((elem) => !elem.flipped))
+                : getDeckValue(dealerCardState)}
+            </span>
+          </p>
+          <p>
+            Player Card value: <span>{getDeckValue(playerCardState)}</span>
+          </p>
+        </div>
+        <div className={pageStyle.actionsPanel}>
+          <p>{directionState}</p>
+          {
+            <div style={{ display: "flex", gap: "8px" }}>
+              {playerChoice && (
+                <>
+                  <button
+                    className={pageStyle.hoversGreen}
+                    onClick={() => {
+                      placeCard();
+                    }}
+                  >
+                    Hit
+                  </button>
+                  <button
+                    className={pageStyle.hoversRed}
+                    onClick={() => {
+                      dealerPlays();
+                      setIsHidden(true);
+                    }}
+                  >
+                    Stay
+                  </button>
+                </>
+              )}
+              <button onClick={() => window.location.reload()}>Reset</button>
+            </div>
+          }
+        </div>
+        <div className={pageStyle.scorePanel}>
+          <p>Wins: {window.localStorage.getItem('wins')||0}</p>
+          <p>Losses: {window.localStorage.getItem('losses')||0}</p>
+          <button onClick={()=>{window.localStorage.removeItem('wins'); window.localStorage.removeItem('losses')}}>reset</button>
+        </div>
         <div className={pageStyle.playerCards}>
           {playerCardState.map((element) => (
             <Card type={element.card} flipped={element.flipped} />
           ))}
         </div>
-      </div>
-      <div className={pageStyle.actionsPanel}>
-        <div style={{ display: "flex", gap: "8px" }}>
-          {playerChoice &&
-            <>
-              <button
-                onClick={() => {
-                  placeCard();
-                }}
-              >
-                Hit
-              </button>
-              <button
-                onClick={() => {
-                  setDealerPlay(dealerPlay+1);
-                }}
-              >
-                Stay
-              </button>
-            </>
-          }
-        </div>
-        <p>{directionState}</p>
       </div>
     </div>
   );
