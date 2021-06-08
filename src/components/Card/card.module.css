@@ -1,7 +1,7 @@
 
 .cardContainer{
 	transition: filter 240ms ease;
-	width: 200px;
+	width: 160px;
 }
 
 .cardContainer>div,

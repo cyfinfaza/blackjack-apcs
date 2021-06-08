@@ -222,6 +222,7 @@ function App() {
     <div className={pageStyle.container}>
       <div className={pageStyle.header}>
         <h1>React Blackjack</h1>
+        
         <div className="buttonPanel">
           <button
             onClick={() => {
@@ -231,6 +232,11 @@ function App() {
           >
             Switch Theme
           </button>
+        </div>
+        <div className={pageStyle.scorePanel}>
+          <p>Wins: {window.localStorage.getItem('wins')||0}</p>
+          <p>Losses: {window.localStorage.getItem('losses')||0}</p>
+          <button onClick={()=>{window.localStorage.removeItem('wins'); window.localStorage.removeItem('losses')}}>reset</button>
         </div>
       </div>
       <div className={pageStyle.content}>
@@ -284,11 +290,6 @@ function App() {
               <button onClick={() => window.location.reload()}>Reset</button>
             </div>
           }
-        </div>
-        <div className={pageStyle.scorePanel}>
-          <p>Wins: {window.localStorage.getItem('wins')||0}</p>
-          <p>Losses: {window.localStorage.getItem('losses')||0}</p>
-          <button onClick={()=>{window.localStorage.removeItem('wins'); window.localStorage.removeItem('losses')}}>reset</button>
         </div>
         <div className={pageStyle.playerCards}>
           {playerCardState.map((element) => (
