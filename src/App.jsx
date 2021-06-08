@@ -66,7 +66,7 @@ const allCards = [
 function App() {
   const possibleCardArray = useRef(allCards);
   const [directionState, setDirectionState] = useState("no state atm");
-
+  const [dealerPlay, setDealerPlay] = useState(0);
   function getCard() {
     var getCardIndex = Math.floor(
       Math.random() * possibleCardArray.current.length
@@ -94,7 +94,7 @@ function App() {
     setDealerCardState([
       ...dealerCardState,
       {
-        type: getCard(),
+        card: getCard(),
         flipped: isFlipped,
       },
     ]);
@@ -109,8 +109,6 @@ function App() {
       },
     ]);
   }
-
-  function resetHand() {}
 
   function getCardValue(cardType, tryWithA1 = false) {
     const mapping = {
@@ -142,6 +140,11 @@ function App() {
       { card: getCard(), flipped: true },
       { card: getCard(), flipped: false },
     ];
+    const initialPlayerDeck = [
+      { card: getCard(), flipped: false},
+      { card: getCard(), flipped: false}
+    ]
+    setPlayerCardState(initialPlayerDeck);
     setDealerCardState(initialDealerDeck);
     console.log(getDeckValue(initialDealerDeck));
   }, []);
@@ -150,10 +153,29 @@ function App() {
     var deckVal = getDeckValue(playerCardState);
     console.log(deckVal);
     if (deckVal > 21) {
-      setDirectionState("Player Loses! Dealer wins!");
+      setDirectionState("Player bust! Dealer wins!");
       setPlayerChoice(false)
     }
   }, [playerCardState]);
+
+  useEffect(() => {
+    var dealerDeckVal = getDeckValue(dealerCardState);
+    var gameOver = false;
+    console.log(getDeckValue(dealerCardState));
+    dealerDeckVal = getDeckValue(dealerCardState);
+    //while(gameOver==false){
+    if(dealerDeckVal > 21){
+      setDirectionState("Dealer bust! Player wins!");
+      gameOver=true;
+    } else if(dealerDeckVal>getDeckValue(playerCardState)){
+      setDirectionState("Dealer wins!");
+      gameOver=true;
+    } else{
+      placeDealerCard(false);
+    }
+  //ssszxsazWDXQsazWDXQsdfzxsazDXWf sdfxcv } 
+  } , [dealerPlay]);
+
 
   return (
     <div className={pageStyle.container}>
@@ -198,7 +220,7 @@ function App() {
               </button>
               <button
                 onClick={() => {
-                  placeCard();
+                  setDealerPlay(dealerPlay+1);
                 }}
               >
                 Stay
