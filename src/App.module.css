@@ -1,7 +1,7 @@
 .container{
   display: grid;
   grid-template-rows: auto 1fr auto;
-  gap: 12px;
+  /* gap: 12px; */
   width: 100vw;
   height: 100vh;
   padding: 16px;
@@ -28,7 +28,9 @@
   justify-content: center;
   gap: 16px;
   flex-wrap: wrap;
-  margin-bottom: 12px;
+  padding-bottom: 14px;
+  margin-bottom: 16px;
+  border-bottom: 2px var(--foreground-color) solid;
 }
 
 .content{

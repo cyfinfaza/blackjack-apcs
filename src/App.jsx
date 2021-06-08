@@ -188,7 +188,9 @@ function App() {
         if (dealerDeckVal > getDeckValue(playerCardState)) {
           setDirectionState("Dealer wins!");
           updateScore('losses')
-        } else {
+        } else if(dealerDeckVal === getDeckValue(playerCardState)){
+          setDirectionState("Draw!");
+        }else{
           setDirectionState("Dealer loses!");
           updateScore('wins')
         }
@@ -236,7 +238,7 @@ function App() {
         <div className={pageStyle.scorePanel}>
           <p>Wins: {window.localStorage.getItem('wins')||0}</p>
           <p>Losses: {window.localStorage.getItem('losses')||0}</p>
-          <button onClick={()=>{window.localStorage.removeItem('wins'); window.localStorage.removeItem('losses')}}>reset</button>
+          <button onClick={()=>{window.localStorage.removeItem('wins'); window.localStorage.removeItem('losses'); window.location.reload()}}>reset</button>
         </div>
       </div>
       <div className={pageStyle.content}>
