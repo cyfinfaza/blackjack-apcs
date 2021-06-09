@@ -116,7 +116,7 @@
 .scorePanel>button{
   font-size: 14px;
   padding: 4px;
-  margin-top: 4px;
+  /* margin-top: 4px; */
   opacity: 0.5;
 }
 

@@ -65,13 +65,9 @@ const allCards = [
 
 function App() {
   const possibleCardArray = useRef(allCards);
-  const [directionState, setDirectionState] = useState(
-    "Hit to add card, Stay to pass to dealer"
-  );
+  const [directionState, setDirectionState] = useState("Hit to add card, stay to pass to dealer");
   function getCard() {
-    var getCardIndex = Math.floor(
-      Math.random() * possibleCardArray.current.length
-    );
+    var getCardIndex = Math.floor(Math.random() * possibleCardArray.current.length);
     var cardToAdd = possibleCardArray.current.splice(getCardIndex, 1)[0];
     console.log(possibleCardArray.current);
     console.log(cardToAdd);
@@ -126,13 +122,13 @@ function App() {
     let sum = 0;
     let numA1s = 0;
     cards.forEach((card) => {
-      if(card.card.charAt(0)=='A'){
+      if (card.card.charAt(0) == "A") {
         numA1s++;
       }
-      sum += getCardValue(card.card, numA1s<=tryNumWithA1)
+      sum += getCardValue(card.card, numA1s <= tryNumWithA1);
     });
-    console.log(numA1s)
-    if (sum > 21 && numA1s>tryNumWithA1) return getDeckValue(cards, tryNumWithA1+1);
+    console.log(numA1s);
+    if (sum > 21 && numA1s > tryNumWithA1) return getDeckValue(cards, tryNumWithA1 + 1);
     return sum;
   }
 
@@ -157,13 +153,13 @@ function App() {
     console.log(deckVal);
     if (deckVal > 21) {
       setDirectionState("Player bust! Dealer wins!");
-      updateScore('losses')
-          setPlayerChoice(false);
+      updateScore("losses");
+      setPlayerChoice(false);
     }
   }, [playerCardState]);
 
-  function updateScore(condition){
-    window.localStorage.setItem(condition, (parseInt(window.localStorage.getItem(condition))||0)+1)
+  function updateScore(condition) {
+    window.localStorage.setItem(condition, (parseInt(window.localStorage.getItem(condition)) || 0) + 1);
   }
 
   const playerStayed = useRef(false);
@@ -182,17 +178,17 @@ function App() {
       console.log(dealerDeckVal);
       if (dealerDeckVal > 21) {
         setDirectionState("Dealer bust! Player wins!");
-        updateScore('wins')
+        updateScore("wins");
         break;
       } else if (dealerDeckVal >= 17) {
         if (dealerDeckVal > getDeckValue(playerCardState)) {
           setDirectionState("Dealer wins!");
-          updateScore('losses')
-        } else if(dealerDeckVal === getDeckValue(playerCardState)){
+          updateScore("losses");
+        } else if (dealerDeckVal === getDeckValue(playerCardState)) {
           setDirectionState("Draw!");
-        }else{
+        } else {
           setDirectionState("Dealer loses!");
-          updateScore('wins')
+          updateScore("wins");
         }
         break;
       } else {
@@ -224,11 +220,11 @@ function App() {
     <div className={pageStyle.container}>
       <div className={pageStyle.header}>
         <h1>React Blackjack</h1>
-        
+
         <div className="buttonPanel">
           <button
             onClick={() => {
-              window.localStorage.setItem('lightTheme', !document.body.classList.contains('theme-light'))
+              window.localStorage.setItem("lightTheme", !document.body.classList.contains("theme-light"));
               document.querySelector("body").classList.toggle("theme-light");
             }}
           >
@@ -236,32 +232,34 @@ function App() {
           </button>
         </div>
         <div className={pageStyle.scorePanel}>
-          <p>Wins: {window.localStorage.getItem('wins')||0}</p>
-          <p>Losses: {window.localStorage.getItem('losses')||0}</p>
-          <button onClick={()=>{window.localStorage.removeItem('wins'); window.localStorage.removeItem('losses'); window.location.reload()}}>reset</button>
+          <p>Wins: {window.localStorage.getItem("wins") || 0}</p>
+          <p>Losses: {window.localStorage.getItem("losses") || 0}</p>
+          <button
+            onClick={() => {
+              window.localStorage.removeItem("wins");
+              window.localStorage.removeItem("losses");
+              window.location.reload();
+            }}
+          >
+            reset
+          </button>
         </div>
       </div>
       <div className={pageStyle.content}>
         <div className={pageStyle.dealerCards}>
           {/* <div> */}
-            {dealerCardState.map((element) => (
-              <Card type={element.card} flipped={element.flipped} />
-            ))}
+          {dealerCardState.map((element) => (
+            <Card type={element.card} flipped={element.flipped} />
+          ))}
           {/* </div> */}
           {/* {<div>{placeDealerCard}</div>} */}
         </div>
         <div className={pageStyle.cardValueMonitor}>
           <p>
-            Dealer card value:{" "}
-            <span>
-              {!isHidden
-                ? "? + " +
-                  getDeckValue(dealerCardState.filter((elem) => !elem.flipped))
-                : getDeckValue(dealerCardState)}
-            </span>
+            Dealer's deck value: <span>{!isHidden ? "? + " + getDeckValue(dealerCardState.filter((elem) => !elem.flipped)) : getDeckValue(dealerCardState)}</span>
           </p>
           <p>
-            Player Card value: <span>{getDeckValue(playerCardState)}</span>
+            Player's deck value: <span>{getDeckValue(playerCardState)}</span>
           </p>
         </div>
         <div className={pageStyle.actionsPanel}>
