@@ -38,6 +38,7 @@
   flex-direction: column;
   justify-content: space-between;
   overflow: hidden;
+  align-items: center;
 }
 
 .content>div>*{
@@ -45,12 +46,13 @@
 }
 
 .dealerCards, .playerCards{
-  width: 100%;
+  max-width: 100%;
   display: flex;
   gap: 8px;
   overflow-x: auto;
   overflow-y: hidden;
-  justify-content: center;
+  /* justify-content: center; */
+
 }
 
 /* .dealerCards{
@@ -72,15 +74,19 @@
   justify-content: flex-start;
   align-items: center;
   gap: 8px;
+  margin-bottom: 12px;
 }
 
 .actionsPanel>p{
   margin: 0;
-  font-size: 32px;
+  /* font-size: 28px; */
+  font-size: 4vh;
+  text-align: center;
 }
 
 .cardValueMonitor>p{
-  font-size: 28px;
+  /* font-size: 22px; */
+  font-size: 3vh;
   /* color: var(--foreground-color); */
   font-weight: 400;
   margin-block: 8px;

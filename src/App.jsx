@@ -243,12 +243,12 @@ function App() {
       </div>
       <div className={pageStyle.content}>
         <div className={pageStyle.dealerCards}>
-          <div>
+          {/* <div> */}
             {dealerCardState.map((element) => (
               <Card type={element.card} flipped={element.flipped} />
             ))}
-          </div>
-          {<div>{placeDealerCard}</div>}
+          {/* </div> */}
+          {/* {<div>{placeDealerCard}</div>} */}
         </div>
         <div className={pageStyle.cardValueMonitor}>
           <p>
