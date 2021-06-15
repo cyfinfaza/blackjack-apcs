@@ -2,12 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import * as pageStyle from "./App.module.css";
 import Card from "./components/Card/Card";
 
-// [
-//   {
-//     card:"3H",
-//     flipped:false,
-//   }
-// ]
+
+// All cards in the deck
 const allCards = [
   "AH",
   "2H",
@@ -66,6 +62,8 @@ const allCards = [
 function App() {
   const possibleCardArray = useRef(allCards);
   const [directionState, setDirectionState] = useState("Hit to add card, stay to pass to dealer");
+  
+  //returns the card that will be added to either the player or dealer hand. Removes the card from the possible cards
   function getCard() {
     var getCardIndex = Math.floor(Math.random() * possibleCardArray.current.length);
     var cardToAdd = possibleCardArray.current.splice(getCardIndex, 1)[0];
@@ -79,16 +77,18 @@ function App() {
   const [playerChoice, setPlayerChoice] = useState(true);
   const [isHidden, setIsHidden] = useState(false);
 
-  function placeDealerCard(isFlipped = false) {
-    setDealerCardState([
-      ...dealerCardState,
-      {
-        card: getCard(),
-        flipped: isFlipped,
-      },
-    ]);
-  }
 
+  // function placeDealerCard(isFlipped = false) {
+  //   setDealerCardState([
+  //     ...dealerCardState,
+  //     {
+  //       card: getCard(),
+  //       flipped: isFlipped,
+  //     },
+  //   ]);
+  // }
+
+  //places player card on the webpage
   function placeCard(isFlipped = false) {
     setPlayerCardState([
       ...playerCardState,
@@ -99,6 +99,7 @@ function App() {
     ]);
   }
 
+  //gets the value of each card by converting to a number
   function getCardValue(cardType, tryWithA1 = false) {
     const mapping = {
       A: tryWithA1 ? 1 : 11,
@@ -118,6 +119,7 @@ function App() {
     return mapping[cardType.charAt(0)];
   }
 
+  //gets the value of the total number of cards that the player/dealer holds
   function getDeckValue(cards, tryNumWithA1 = 0) {
     let sum = 0;
     let numA1s = 0;
@@ -132,6 +134,7 @@ function App() {
     return sum;
   }
 
+  //runs at start to set initial dealer and player card state
   useEffect(() => {
     const initialDealerDeck = [
       { card: getCard(), flipped: true },
@@ -148,6 +151,7 @@ function App() {
     console.log(getDeckValue(initialDealerDeck));
   }, []);
 
+  //runs when player card state changes to check if it's over 21
   useEffect(() => {
     var deckVal = getDeckValue(playerCardState);
     console.log(deckVal);
@@ -158,11 +162,12 @@ function App() {
     }
   }, [playerCardState]);
 
+  //Saves the wins and loses of each round between page refreshes
   function updateScore(condition) {
     window.localStorage.setItem(condition, (parseInt(window.localStorage.getItem(condition)) || 0) + 1);
   }
 
-  const playerStayed = useRef(false);
+  // const playerStayed = useRef(false);
 
   // useEffect(() => {
   //   if(playerStayed.current){
@@ -170,6 +175,7 @@ function App() {
   //   }
   // }, [dealerCardState]);
 
+  //runs after player stays checks whether player or dealer wins the round
   function dealerPlays() {
     var dealerTempDeck = dealerCardState;
     console.log(getDeckValue(dealerCardState));
@@ -210,11 +216,13 @@ function App() {
     setPlayerChoice(false);
   }
 
-  // function hideDealerCards(){
-  //   if(isHidden){
-  //     return ""
-  //   }
-  // }
+  //gets the win loss % for each round 
+  function computeWinLoss(){
+    var wins = window.localStorage.getItem("wins");
+    var lose = window.localStorage.getItem("losses");
+    var winLose = parseFloat(wins) + parseFloat(lose);
+    return Number((wins/winLose*100).toFixed(1));
+  }
 
   return (
     <div className={pageStyle.container}>
@@ -234,6 +242,7 @@ function App() {
         <div className={pageStyle.scorePanel}>
           <p>Wins: {window.localStorage.getItem("wins") || 0}</p>
           <p>Losses: {window.localStorage.getItem("losses") || 0}</p>
+          <p>Win %: {computeWinLoss() || 0} </p>
           <button
             onClick={() => {
               window.localStorage.removeItem("wins");
